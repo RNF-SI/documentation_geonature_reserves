@@ -36,12 +36,12 @@ L'ensemble du code de GeoNature, logiciel open-source, est disponible sur `le Gi
 
   Soyez sûr d'être à la racine du dossier de l'utilisateur geonatureadmin ``/home/geonatureadmin`` (voir partie :ref:`explorer-repertoires`), sinon l'installation ne fonctionnera pas.
 
-Lancez ensuite les commandes suivantes (en remplaçant ``2.8.1`` par le numéro de la `dernière version stable de GeoNature <https://github.com/PnEcrins/GeoNature/releases>`_):
+Lancez ensuite les commandes suivantes (en remplaçant ``2.9.0`` par le numéro de la `dernière version stable de GeoNature <https://github.com/PnEcrins/GeoNature/releases>`_):
 
 ::
 
-  wget https://raw.githubusercontent.com/PnX-SI/GeoNature/2.8.1/install/install_all/install_all.ini
-  wget https://raw.githubusercontent.com/PnX-SI/GeoNature/2.8.1/install/install_all/install_all.sh
+  wget https://raw.githubusercontent.com/PnX-SI/GeoNature/2.9.1/install/install_all/install_all.ini
+  wget https://raw.githubusercontent.com/PnX-SI/GeoNature/2.9.1/install/install_all/install_all.sh
 
 Les fichiers sont maintenant téléchargés. Pour le vérifier, vous pouvez lancer la commande ``ls``, et vous devriez avoir les fichiers ``install_all.ini`` et ``install_all.sh`` de listés.
 
@@ -132,12 +132,12 @@ Pour la définition des numéros de version des dépendances, voir `le tableau d
   # Installation de l'application UsersHub
   install_usershub_app=true # => NE PAS MODIFIER
   # Version de UsersHub
-  usershub_release=2.2.1 # => NE PAS MODIFIER
+  usershub_release=2.2.2 # => NE PAS MODIFIER
 
   ### CONFIGURATION GEONATURE ###
 
   # Version de GeoNature
-  geonature_release=2.8.1 # => NE PAS MODIFIER
+  geonature_release=2.9.0 # => NE PAS MODIFIER
   # Effacer la base de données GeoNature existante lors de la réinstallation
   drop_geonaturedb=false # => NE PAS MODIFIER, A MOINS DE PROCEDER A UNE REINSTALLATION DE GEONATURE
   # Nom de la base de données GeoNature
@@ -171,7 +171,7 @@ Pour la définition des numéros de version des dépendances, voir `le tableau d
   ### CONFIGURATION TAXHUB ###
 
   # Version de TaxHub
-  taxhub_release=1.9.1 # => NE PAS MODIFIER
+  taxhub_release=1.9.4 # => NE PAS MODIFIER
   # Pour des questions de performances de GeoNature, il n'y a pas de base de données spécifique pour TaxHub
   # Le schéma "taxonomie" de TaxHub est intégré dans la BDD de GeoNature pour que les requêtes ne soient pas trop pénalisées
   # par un accès à une BDD distante.
@@ -227,7 +227,7 @@ Vous pouvez vous connecter avec l’utilisateur intégré par défaut (admin/adm
 En cas d'erreur
 ***************
 
-Vous pouvez à tout moment contacter le chargé de mission géomaticien de RNF : `zacharie.moulin-rnf@espaces-naturels.fr <mailto:zacharie.moulin-rnf@espaces-naturels.fr>`_
+Vous pouvez à tout moment contacter le chargé de mission géomaticien de RNF : `si-rnf@rndefrance.fr <mailto:si-rnf@espaces-naturels.fr>`_
 
 Lors du processus d'installation, des fichiers dits de logs sont créés. Il s'agit de rapports sur l'état de l'installation, qui détaillent les éventuelles erreurs.
 

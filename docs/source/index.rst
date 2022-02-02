@@ -14,3 +14,5 @@ Elle est suffisamment détaillée pour permettre à n'importe qui de déployer G
    :maxdepth: 2
   serveur
   installation
+  domaine
+  configuration
