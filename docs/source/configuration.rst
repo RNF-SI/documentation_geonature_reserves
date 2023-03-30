@@ -12,21 +12,26 @@ Les paramètres généraux de l'application sont situés dans le fichier ``geona
 
   nano /home/geonatureadmin/geonature/config/geonature_config.toml
 
-Vous pouvez alors y ajouter des paramètres pour votre application. La liste de tous les paramètres possibles est disponible dans le fichier ``default_config.toml.example``, localisé dans le même dossier, `également consultable sur ce lien <https://github.com/PnX-SI/GeoNature/blob/master/config/default_config.toml.example`.
+Vous pouvez alors y ajouter des paramètres pour votre application. La liste de tous les paramètres possibles est disponible dans le fichier ``default_config.toml.example``, localisé dans le même dossier, `également consultable sur ce lien <https://github.com/PnX-SI/GeoNature/blob/master/config/default_config.toml.example>`_.
 
-A chaque fois que vous modifiez le fichier de configuration geonature_config.toml, vous devez relancer les commandes suivantes pour qu'elles soient prises en compte :
+Pour afficher vos modifications, sauvegardez simplement le fichier et rafraichissez la page de votre navigateur en vidant le cache : CTRL + SHIFT + R
 
-::
+.. IMPORTANT::
 
-  cd /home/geonatureadmin/geonature/backend
-  source venv/bin/activate
-  geonature update_configuration
-  deactivate
+    Depuis la version 2.12 du 27 mars 2023, l'affichage des paramètres custom est dynamique, c'est à dire que vous n'avez pas d'action de recompilation du code à effectuer après l'ajout d'un fichier. 
+    Sur une version antérieure, chaque fois que vous modifiez le fichier de configuration geonature_config.toml, vous devez relancer les commandes suivantes pour qu'elles soient prises en compte :
+
+    ::
+
+        cd /home/geonatureadmin/geonature/backend
+        source venv/bin/activate
+        geonature update_configuration
+        deactivate
 
 Parmis les paramètres à modifier, en voici quelques'uns qui peuvent être important :
 
 Modifier le nom de l'application
------------------
+--------------------------------
 
 Dans la première partie, vous pouvez ajouter le nom de votre application, qui apparaitra en haut de votre GeoNature (à placer après le paramètre API_TAXHUB par exemple) :
 
@@ -37,39 +42,39 @@ Dans la première partie, vous pouvez ajouter le nom de votre application, qui a
   
 
 Paramètrer la création de compte
------------------
+--------------------------------
 
 Vous pouvez également paramétrer GeoNature pour que les utilisateurs puissent faire une demande de création de compte.
 Pour cela, vous devez indiquez des informations de connexion à UsersHub avec un utilisateur qui a les droits d'administrateur :
 
 ::
 
-  [USERSHUB]
-      URL_USERSHUB = 'https://usershub.mondomaine.fr' # sans slash f$
-      #Administrateur de mon application
-      ADMIN_APPLICATION_LOGIN = "nomutilisateuradmin"
-      ADMIN_APPLICATION_PASSWORD = "motdepasseutilisateuradmin"
+    [USERSHUB]
+        URL_USERSHUB = 'https://usershub.mondomaine.fr' # sans slash f$
+        #Administrateur de mon application
+        ADMIN_APPLICATION_LOGIN = "nomutilisateuradmin"
+        ADMIN_APPLICATION_PASSWORD = "motdepasseutilisateuradmin"
 
 Vous devez également ajouter des paramètres pour la gestion des comptes (et autoriser la création de comptes, décider s'il nécessite une validation ou non) :
 
 ::
 
   # Gestion des demandes d'inscription
-  [ACCOUNT_MANAGEMENT]
-      # Activer l'affichage du lien vers le formulaire d'inscription
-      ENABLE_SIGN_UP = true
+    [ACCOUNT_MANAGEMENT]
+        # Activer l'affichage du lien vers le formulaire d'inscription
+        ENABLE_SIGN_UP = true
 
-      # Activer l'affichage de l'onglet de gestion des demandes de compte
-      # utilisateur
-      ENABLE_USER_MANAGEMENT = false
+        # Activer l'affichage de l'onglet de gestion des demandes de compte
+        # utilisateur
+        ENABLE_USER_MANAGEMENT = false
 
-      # Valider automatiquement la demande de création de compte (=true),
-      # sinon nécessite une validation (=false)
-      AUTO_ACCOUNT_CREATION = false
+        # Valider automatiquement la demande de création de compte (=true),
+        # sinon nécessite une validation (=false)
+        AUTO_ACCOUNT_CREATION = false
 
-      # Créer automatiquement (=true) un nouveau jeu de données pour chaque
-      # compte utilisateur
-      AUTO_DATASET_CREATION = true
+        # Créer automatiquement (=true) un nouveau jeu de données pour chaque
+        # compte utilisateur
+        AUTO_DATASET_CREATION = true
 
       # Email du validateur si auto_account_creation = false.
       # Deux syntaxes alternatives sont autorisées pour ce paramètre :
@@ -86,7 +91,7 @@ Vous devez également ajouter des paramètres pour la gestion des comptes (et au
           """
 
 Paramètrer les envois de mails
------------------
+------------------------------
 
 Vous devez également donner des informations d'un serveur mail, pour que l'application puisse envoyer des mails (au nouvel utilisateur ou à l'administrateur).
 
@@ -118,21 +123,60 @@ Pour cela, rapprochez vous de l'administrateur de vos boîtes mails, et demandez
     ERROR_MAIL_TO = ["Prénom NOM <email@email.com>", "email2@email.com"]
 
 
-Changer le logo de l'application
-********************************
+Changer le logo de l'application (et autres images)
+***************************************************
 
 Lorsque vous lancer un nouveau GeoNature, vous avez un logo neutre qui apparait dans l'encart supérieur "MON LOGO". Vous pouvez bien sûr le personnaliser en ajoutant le logo de votre structure, de la manière suivante :
 
-Modifier l'imgage ``logo_structure.png`` du dossier ``/home/<user>/geonature/frontend/src/custom/images`` par votre propre logo. Le bandeau fait 50px de hauteur, vous pouvez adapter la hauteur en conséquence. Concernant le nom du fichier : 
+Un dossier ``/home/<user>/geonature/custom`` existe, crééez dedans un dossier ``images`` avec la commande suivante :
 
-1. Renommer le fichier de votre nouveau logo en ``logo_structure.png``
-2. Laisser le nom d'origine ou renommer votre fichier comme vous le voulez. Dans ce cas, mentionnez ce nom dans le fichier de config de GeoNature : ``LOGO_STRUCTURE_FILE = '<votre_nom_de_fichier>.png'``
+.. code-block:: 
 
-Vous avez également la possibilité, sur le même principe, de modifier le logo de GeoNature en haut à gauche de l'application. 
-Dans ce cas, modifier le l'imgage ``logo_sidebar.jpg`` du dossier ``/home/<user>/geonature/frontend/src/custom/images``. Attention, cette fois-ci, vous êtes obligé de garder le même nom de fichier !
+    cd
+    cd geonature/custom/
+    mkdir images
+
+Ajouter votre image nomée ``logo_structure.png`` dans ce dossier.
+
+Rafraichissez la page de votre navigateur en vidant le cache : CTRL + SHIFT + R
+
+Vous pouvez sursoucher l'ensemble des fichiers présents dans  ``geonature/backend/static/`` par des fichiers portant le même nom et même sous-dossier dans le dossier ``geonature/custom``.
+Ainsi toutes les images de l'application peuvent être modifiées, comme le logo GeoNature du quart supérieur gauche (logo_sidebar.jpg) ou l'image de fond de l'accueil de l'application (login_background.jpg).
+
+Personnaliser la navbar et le texte d'accueil
+*********************************************
+
+Le texte d’introduction, le titre et le pied de page de la page d’Accueil de GeoNature peuvent être modifiés à tout moment, sans réinstallation de l’application.
+
+Pour cela, renseignez les paramètres dans le fichier de configuration de GeoNature (config/geonature_config.toml) :
+
+.. code-block:: 
+
+    [HOME]
+        TITLE = "Bienvenue dans GeoNature"
+        INTRODUCTION = ""
+        FOOTER = ""
+
+Vous pouvez renseigner du code HTML sur plusieurs lignes dans ces paramètres, en le plaçant entre triple quote (« «  »<b>Hello</b> » » »).
+
+
+Les couleurs de textes, couleurs de fonds, forme des boutons etc peuvent être adaptées en renseignant un fichier ``custom/css/frontend.css`` contenant votre surcouche des classes CSS de l’application.
+
+Par exemple, pour remplacer la couleur de fond du bandeau de navigation par une image, on peut apporter la modification suivante :
+
+
+.. code-block:: css
+
+    html body pnx-root pnx-nav-home mat-sidenav-container.sidenav-container.mat-drawer-container.mat-sidenav-container mat-sidenav-content.mat-drawer-content.mat-sidenav-content mat-toolbar#app-toolbar.row.mat-toolbar
+    {
+    background :
+    url(../images/bandeau_test.jpg)
+    }
+
+Dans ce cas, l’image ``bandeau_test.jpg`` doit se trouver dans le répertoire ``custom/images``.
 
 Personnaliser le nom et les pictos des modules
-********************************
+**********************************************
 
 .. IMPORTANT::
 
@@ -170,7 +214,7 @@ Depuis la version 2.5.0, il est aussi possible de customiser l'ordre des modules
 
 
 Paramètrer l'affichage cartographique
-********************************
+*************************************
 
 Il est possible de paramètrer le niveau de zoom et le centre de votre carte. Pour cela, modifier les paramètres suivants à votre guise :
 
@@ -199,10 +243,10 @@ Il est possible de paramètrer le niveau de zoom et le centre de votre carte. Po
 
 
 Personnaliser les fonds de carte et l'affichage de zonages
-********************************
+**********************************************************
 
 Personnaliser les fonds de carte
------------------
+--------------------------------
 
 Depuis la version XX, il est possible de personaliser ses fonds de cartes via des flux WMS/WMTS paramètrables dans le fichier ``geonature_config.toml``.
 Voici quelques exemples de fonds de cartes:
@@ -228,7 +272,7 @@ Voici quelques exemples de fonds de cartes:
     [[MAPCONFIG.BASEMAP]]
         name = "IGN Ortho IRC"
         url = "https://wxs.ign.fr/ortho/geoportail/wmts?service=WMTS&REQUEST=GetTile&version=1.0.0&tilematrixset=PM&tilematrix={z}&tilecol={x}&tilerow={y}&layer=ORTHOIMAGERY.ORTHOPHOTOS.IRC&format=image/jpeg&style=normal"
-    	attributions = "IGN-F/Géoportail"
+        attributions = "IGN-F/Géoportail"
     [[MAPCONFIG.BASEMAP]]
         name = "IGN Scan 25"
         url = "https://wxs.ign.fr/YOUR-IGN-KEY/geoportail/wmts?LAYER=GEOGRAPHICALGRIDSYSTEMS.MAPS&EXCEPTIONS=text/xml&FORMAT=image/jpeg&SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&STYLE=normal&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}"
@@ -253,7 +297,7 @@ Voici quelques exemples de fonds de cartes:
 
 
 Personnaliser l'affichage de zonages (2.11)
------------------
+-------------------------------------------
 
 Depuis la version 2.11 de GeoNature, il est possible de surcoucher l'affichage de zonages sur la carte. L'activation des couches se fera dans le même encart que le choix des fonds de carte à droite de la carte. Vous pouvez décider de les faire afficher ou non à l'ouverture de l'application en mettant le paramètre ``activate`` à ``true``. 
 
@@ -309,7 +353,7 @@ A noter que les zonages peuvent provenir du schéma ref_geo (référentiel géog
         
 
 Paramètrer des filtres cartographiques personnalisés (Module SYNTHESE et VALIDATION)
-********************************
+************************************************************************************
 
 Depuis la version XX, il est possible de rajouter des filtres cartographique sur la recherche d'occurrences dans les modules SYNTHESE et VALIDATION. Il est ainsi possible de choisir les zonages de votre référentiel géographique interne (schéma ``ref_geo``) sur lesquels vous souahitez filtrer vos données.
 
@@ -336,58 +380,15 @@ Dans la balise ``[SYNTHESE]`` de votre fichier ``geonature_config.toml`` (le cr�
 
 Même si l'on paramètre ses filtres dans la balise ``[SYNTHESE]``, ils se répercuteront dans le module VALIDATION.
 
-Personnaliser la page d'introduction de l'ACCUEIL
-********************************
-
-.. IMPORTANT::
-
-    Ce point est en partie repris de la documentation officielle : https://docs.geonature.fr/admin-manual.html#customiser-le-contenu
-
-* Customiser le contenu de la page d’introduction :
-
-Le texte d'introduction et le titre de la page d'Accueil de GeoNature peuvent être modifiés à tout moment, sans réinstallation de l'application. Il en est de même pour le bouton d’accès à la synthèse.
-
-Il suffit pour cela de mettre à jour le fichier ``introduction.component.html``, situé dans le répertoire ``geonature/frontend/src/custom/components/introduction``.
-
-Afin que ces modifications soient prises en compte dans l'interface, il est nécessaire de relancer les commandes suivantes :
-
-.. code-block:: console
-
-    cd /home/`whoami`/geonature/frontend
-    npm run build
-
-* Customiser l'aspect esthétique
-
-Les couleurs de textes, couleurs de fonds, forme des boutons etc peuvent être adaptées en renseignant le fichier ``custom.css``, situé dans le répertoire ``geonature/frontend/src/assets``.
-
-Pour remplacer la couleur de fond du bandeau de navigation par une image, on peut par exemple apporter la modification suivante :
-
-.. code-block:: css
-
-    html body pnx-root pnx-nav-home mat-sidenav-container.sidenav-container.mat-drawer-container.mat-sidenav-container mat-sidenav-content.mat-drawer-content.mat-sidenav-content mat-toolbar#app-toolbar.row.mat-toolbar
-   {
-      background :
-      url(bandeau_test.jpg)
-   }
-
-Dans ce cas, l’image ``bandeau_test.jpg`` doit se trouver dans le répertoire ``geonature/frontend/src``.
-
-Comme pour la modification des contenus, il est nécessaire de relancer la commande suivante pour que les modifications soient prises en compte :
-
-.. code-block:: console
-
-    cd /home/`whoami`/geonature/frontend
-    npm run build
-
 Exemples de gestion des permissions
-********************************
+***********************************
 
 .. WARNING::
 
     Pour bien comprendre la gestion des permissions, veuillez vous référer à la documentation officielle : https://docs.geonature.fr/admin-manual.html#gestion-des-droits
 
 Cas d'une personne mobilisée sur deux réserves, avec des jeux de données par réserve.
------------------
+-------------------------------------------------------------------------------------
 
 Dans le cas où vous avez un technicien affecté sur 2 réserves, que vos jeux de données sont séparés par réserve, et que vous souhaitez ne pas donner accès en écriture à toutes les réserves :
 
@@ -399,9 +400,9 @@ Dans le cas où vous avez un technicien affecté sur 2 réserves, que vos jeux d
 6. La personne concernée aura normalement les permissions CRUVED sur les jeux de données des deux réserves
 
 Créer ses exports personnalisés (Module EXPORT)
-********************************
+***********************************************
 
-La création des exports personalisés dans le module EXPORT s'appuie sur le concept de "vue" dans PostgreSQL. Les vues se manifeste comme le résultat d'une requête SQL sous la forme d'un tableau de données.
+La création des exports personalisés dans le module EXPORT s'appuie sur le concept de "vue" dans PostgreSQL. Les vues se manifestent comme le résultat d'une requête SQL sous la forme d'un tableau de données.
 
 Ainsi pour créer son export personnalisé :
 

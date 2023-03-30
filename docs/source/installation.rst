@@ -36,12 +36,12 @@ L'ensemble du code de GeoNature, logiciel open-source, est disponible sur `le Gi
 
   Soyez sûr d'être à la racine du dossier de l'utilisateur geonatureadmin ``/home/geonatureadmin`` (voir partie :ref:`explorer-repertoires`), sinon l'installation ne fonctionnera pas.
 
-Lancez ensuite les commandes suivantes (en remplaçant ``2.9.0`` par le numéro de la `dernière version stable de GeoNature <https://github.com/PnEcrins/GeoNature/releases>`_):
+Lancez ensuite les commandes suivantes (en remplaçant ``2.12.0`` par le numéro de la `dernière version stable de GeoNature <https://github.com/PnEcrins/GeoNature/releases>`_):
 
 ::
 
-  wget https://raw.githubusercontent.com/PnX-SI/GeoNature/2.9.1/install/install_all/install_all.ini
-  wget https://raw.githubusercontent.com/PnX-SI/GeoNature/2.9.1/install/install_all/install_all.sh
+  wget https://raw.githubusercontent.com/PnX-SI/GeoNature/2.12.0/install/install_all/install_all.ini
+  wget https://raw.githubusercontent.com/PnX-SI/GeoNature/2.12.0/install/install_all/install_all.sh
 
 Les fichiers sont maintenant téléchargés. Pour le vérifier, vous pouvez lancer la commande ``ls``, et vous devriez avoir les fichiers ``install_all.ini`` et ``install_all.sh`` de listés.
 
@@ -53,6 +53,7 @@ Certains paramètres doivent être précisés avant de procéder à l'installati
 Pour modifier un fichier sur un serveur, il existe plusieurs solutions, dont en voici deux :
 
 1. La première consiste à modifier le fichier directement dans la console. Pour cela, nous utiliserons le programme appelé ``Nano`` :
+  
   Lancez la commande suivante :
 
   ::
@@ -227,7 +228,7 @@ Vous pouvez vous connecter avec l’utilisateur intégré par défaut (admin/adm
 En cas d'erreur
 ***************
 
-Vous pouvez à tout moment contacter le chargé de mission géomaticien de RNF : `si-rnf@rndefrance.fr <mailto:si-rnf@espaces-naturels.fr>`_
+Vous pouvez à tout moment contacter le chargé de mission géomaticien de RNF : `si@rnfrance.org <mailto:si@rnfrance.org>`_
 
 Lors du processus d'installation, des fichiers dits de logs sont créés. Il s'agit de rapports sur l'état de l'installation, qui détaillent les éventuelles erreurs.
 
