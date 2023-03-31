@@ -7,7 +7,7 @@ Nous allons voir comment configurer nos applications pour y accéder avec des ur
 
 Demandez au gestionnaire de votre site internet, qui doit gérer votre domaine, de vous créer les zones DNS avec les paramètres suivant :
 
-* Nome de la zone : geonature.nomdomaine.extensiondomaine ET/OU usershub.nomdomaine.extensiondomaine ET/OU taxhub.nomdomaine.extensiondomaine
+* Nome de la zone : geonature.nomdomaine.extensiondomaine
 * Type de zone : A
 * Valeur : adresseipduserveur
 
@@ -25,157 +25,144 @@ Le second, plus récent, est le HTTPS. C'est un protocole sécurisé, qui est de
 
 Dans un premier temps, nous allons configurer nos sous-domaines en HTTP, nous verrons ensuite comment les passer en HTTPS (l'un découle de l'autre).
 
-Pour chaque application, il nous faut créer ou éditer un fichier localisé dans ``/etc/apache2/sites-available/`` qui portera le nom de l'application avec l'extension ``.conf``. Qu'il existe ou non, vous pouvez éditer un fichier avec ``Nano``.
+Deux possibilité existent pour créer les accès aux 3 applications (GeoNature, TaxHub et UsersHub) : 
 
-Pour TaxHub, tapez la commande suivante :
+* les 3 applications ont le même sous-domaine, avec le nom de l'application qui suit (sous-domaine.domaine.ext/geonature, sous-domaine.domaine.ext/taxhub ...). C'est la solution par défaut et la plus simple à mettre en oeuvre.
+* les 3 applications ont chacun leur sous-domaine (geonature.domaine.ext, taxhub.domaine.ext, usershub.domaine.ext). Cela demande un peu plus de configuration. 
 
-::
+Sous-domaine unique
+-------------------
 
-  sudo nano /etc/apache2/sites-available/taxhub.conf
+Pour un sous-domaine unique, vous devez éditer fichier ``geonature_config.toml`` :
 
-Ajoutez-y les informations suivantes en ramplacant mondomaine.fr par votre domaine à vous :
+:: 
 
-::
+  nano geonature/config/geonature_config.toml
 
-  # Configuration TaxHub sur sous-domaine
-    <VirtualHost *:80>
-            ServerName taxhub.mondomaine.fr
+Remplacez l'adresse IP de votre serveur par votre domaine : 
 
-            <Location />
-                    ProxyPass http://127.0.0.1:5000/
-                    ProxyPassReverse http://127.0.0.1:5000/
-            </Location>
-    </VirtualHost>
-  # Fin de configuration de TaxHub
+:: 
 
-.. note::
+  URL_APPLICATION = 'http://mon.domaine/geonature'
+  API_ENDPOINT = 'http://mon.domaine/geonature/api'
+  API_TAXHUB = 'http://mon.domaine/taxhub/api'
 
-  Après avoir fait ``CTRL + X`` pour quitter ``Nano`` et validé les modifications en tapant ``O``, il vous sera demandé de valider le nom du fichier, tapez simplement sur ``Entrée``
-
-Pour UsersHub, tapez la commande suivante :
+Vous devez ensuite lancer un script de configuration du serveur apache fourni par geonature :
 
 ::
 
-  sudo nano /etc/apache2/sites-available/usershub.conf
+  cd geonature
+  ./install/06_configure_apache.sh
 
-Ajoutez-y les informations suivantes en ramplacant mondomaine.fr par votre domaine à vous :
+Remplacez à nouveau l'IP par votre domaine dans le fichier de conf apache suivant, puis relancer le serveur apache :
 
-::
-
-  # Configuration UsersHub sur sous-domaine
-      <VirtualHost *:80>
-              ServerName usershub.mondomaine.fr
-              <Location />
-                      ProxyPass http://127.0.0.1:5001/
-                      ProxyPassReverse http://127.0.0.1:5001/
-          </Location>
-      </VirtualHost>
-  # Fin de configuration de UsersHub
-
-Enfin pour GeoNature, tapez la commande suivante :
-
-::
+:: 
 
   sudo nano /etc/apache2/sites-available/geonature.conf
-
-Vous vérez alors que le fichier existe déjà. Vous pouvez effacer son contenu actuel, ou le commenter en mettant des # devant chaque ligne.
-
-Ajoutez-y les informations suivantes en ramplacant mondomaine.fr par votre domaine à vous :
-
-::
-
-  #Configuration GeoNature sur sous-domaine
-      <VirtualHost *:80>
-              ServerName geonature.mondomaine.fr
-              DocumentRoot /home/geonatureadmin/geonature/frontend/dist
-
-              <Directory /home/geonatureadmin/geonature/frontend/dist>
-                      Require all granted
-              </Directory>
-
-              <Location /api>
-                      ProxyPass http://127.0.0.1:8000/api
-                      ProxyPassReverse  http://127.0.0.1:8000/api
-              </Location>
-      </VirtualHost>
-  # Fin de configuration de GeoNature
-
-Modifiez également le fichier suivant :
-
-::
-
-  sudo nano /etc/apache2/sites-available/geonature_maintenance.conf
-
-Il vous sera utile pour passer votre application en mode maintenance (pour une mise à jour par exemple).
-
-Modifiez les informations suivantes :
-
-::
-
-    <VirtualHost *:80>
-        ServerName geonature.mondomaine.fr
-
-        ErrorLog "/var/log/apache2/geonature_error.log"
-        CustomLog "/var/log/apache2/geonature_access.log" combined
-    </VirtualHost>
-
-=====================> A MODIFIER A MON AVIS CE FICHIER <=====================
-
-
-Lancer ensuite les commandes suivantes :
-
-::
-
-  sudo a2ensite taxhub.conf
-  sudo a2ensite usershub.conf
   sudo a2ensite geonature.conf
+  sudo systemctl reload apache2
 
-.. warning::
-
-  On ne fait pas ``sudo a2ensite geonature_maintenance.conf`` car il ne doit être activé qu'en cas de maintenance
-
-On redémare ensuite le serveur apache (qui gère les applications web) en lançant la commande suivante :
+Remplacez également l'IP par votre domaine dans le fichier suivant :
 
 ::
 
-  sudo apachectl restart
+  nano frontend/src/assets/config.json
 
-Il est nécessaire de mettre à jour le fichier de configuration de GeoNature ``geonature_config.toml`` :
-
-::
-
-  nano /home/geonatureadmin/geonature/config/geonature_config.toml
-
-Modifiez les lignes suivantes (déjà présentes dans le fichier), en remplaçant le domaine par le votre :
+Faites un update de GeoNature, et relancez le service :
 
 ::
 
-  URL_APPLICATION = 'http://geonature.mondomaine.fr'
-  API_ENDPOINT = 'http://geonature.mondomaine.fr/api'
-  API_TAXHUB = 'http://taxhub.mondomaine.fr/api'
-
-Pour que ces modifications soient prises en compte, lancer les commandes suivantes :
-
-::
-
-  cd /home/geonatureadmin/geonature/backend
+  cd geonature
   source venv/bin/activate
-  geonature update_configuration
+  geonature update-configuration
   deactivate
+  sudo systemctl restart geonature
 
-Faites la même chose avec le fichier de configuration de UsersHub :
+Vous devez maintenant accéder à votre application sur votre domaine mon.domaine/geonature !
+
+Sous-domaine distincts
+----------------------
+
+Pour plusieurs sous-domaine, vous devez éditer fichier ``geonature_config.toml`` :
+
+:: 
+
+  nano geonature/config/geonature_config.toml
+
+Remplacez l'adresse IP de votre serveur par votre domaine : 
+
+:: 
+
+  URL_APPLICATION = 'http://geonature.mondomaine'
+  API_ENDPOINT = 'http://geonature.mondomaine/api'
+  API_TAXHUB = 'http://taxhub.mondomaine/api'
+
+Vous devez ensuite lancer un script de configuration du serveur apache fourni par geonature :
 
 ::
 
-  nano /home/geonatureadmin/usershub/config/settings.ini
+  cd geonature
+  ./install/06_configure_apache.sh
 
-Modifiez la ligne suivante (déjà présentes dans le fichier), en remplaçant le domaine par le votre :
+De base, un seul fichier dit ``vhost`` existe qui redirige vers les configuration des 3 applications (localisé à ``/etc/apache2/sites-available/geonature.conf``).
+
+Vous devez modifier ce fichier comme suit, pour supprimer les liens vers les conf des autres applications :
 
 ::
 
-  url_application=http://usershub.mondomaine.fr
 
-Ainsi que :
+  <VirtualHost *:80>
+      ServerName geonature-test.reservenaturelle.fr
+
+      IncludeOptional /etc/apache2/conf-available/geonature.conf
+
+      ErrorLog "/var/log/apache2/geonature_error.log"
+      CustomLog "/var/log/apache2/geonature_access.log" combined
+  </VirtualHost>
+
+Vous devez créer un fichier taxhub.conf dans le même dossier (avec la commande ``sudo nano /etc/apache2/sites-available/taxhub.conf``) qui contient ce qui suit :
+
+:: 
+
+  <VirtualHost *:80>
+      ServerName taxhub-test.reservenaturelle.fr
+
+      <Location />
+          ProxyPass http://127.0.0.1:5000/
+          ProxyPassReverse http://127.0.0.1:5000/
+      </Location>
+
+      Alias "/static" "/home/geonatureadmin/taxhub/static"
+      <Directory "/home/geonatureadmin/taxhub/static">
+          AllowOverride None
+          Require all granted
+      </Directory>
+
+
+
+      ErrorLog "/var/log/apache2/geonature_error.log"
+      CustomLog "/var/log/apache2/geonature_access.log" combined
+  </VirtualHost>
+
+Vous devez créer un fichier usershub.conf dans le même dossier (avec la commande ``sudo nano /etc/apache2/sites-available/usershub.conf``) qui contient ce qui suit :
+
+::
+
+  <VirtualHost *:80>
+      ServerName usershub-test.reservenaturelle.fr
+
+      <Location />
+          ProxyPass http://127.0.0.1:5001/
+          ProxyPassReverse http://127.0.0.1:5001/
+      </Location>
+
+      ErrorLog "/var/log/apache2/geonature_error.log"
+      CustomLog "/var/log/apache2/geonature_access.log" combined
+  </VirtualHost>
+
+
+
+Modifiez le fichier de configuration de UsersHub :
 
 ::
 
@@ -187,20 +174,7 @@ Modifiez la ligne suivante (déjà présentes dans le fichier), en remplaçant l
 
   URL_APPLICATION ='http://usershub.mondomaine.fr'
 
-Relancez les services de UsersHub et GeoNature :
-
-::
-
-  sudo service usershub restart
-  sudo service geonature restart
-
-Vos applications doivent maintenant être accessibles via des liens semblalbes à :
-
-* http://geonature.mondomaine.fr
-* http://taxhub.mondomaine.fr
-* http://usershub.mondomaine.fr
-
-Si vous rencontrez une Internal Server Error pour TaxHub, aller modifier le fichier suivant :
+Modifiez le fichier de configuration de TaxHub :
 
 ::
 
@@ -213,11 +187,36 @@ Modifiez la ligne suivante (déjà présentes dans le fichier) :
 
   APPLICATION_ROOT = '/'
 
-Relancez le service de TaxHub :
+Relancez les services de UsersHub et TaxHub :
 
 ::
 
+  sudo service usershub restart
   sudo service taxhub restart
+
+
+Remplacez également l'IP par votre domaine dans le fichier suivant :
+
+::
+
+  nano frontend/src/assets/config.json
+
+Faites un update de GeoNature, et relancez le service :
+
+::
+
+  cd geonature
+  source venv/bin/activate
+  geonature update-configuration
+  deactivate
+  sudo systemctl restart geonature
+
+Vos applications doivent maintenant être accessibles via des liens semblalbes à :
+
+* http://geonature.mondomaine.fr
+* http://taxhub.mondomaine.fr
+* http://usershub.mondomaine.fr
+
 
 Sécuriser ses sous-domaines (HTTPS)
 ***********************************
@@ -277,14 +276,21 @@ Rajouter simplement un s après les http :
   API_ENDPOINT = 'https://geonature.mondomaine.fr/api'
   API_TAXHUB = 'https://taxhub.mondomaine.fr/api'
 
-Relancez la mise à jour de configuration de GeoNature :
+Pour GeoNature ajouter un s à votre nom de domaine dans le fichier de conf de l'API :
 
 ::
 
-  cd /home/geonatureadmin/geonature/backend
+  nano /home/geonatureadmin/geonature/frontend/src/assets/config.json
+
+Faites un update de GeoNature, et relancez le service :
+
+::
+
+  cd geonature
   source venv/bin/activate
-  geonature update_configuration
+  geonature update-configuration
   deactivate
+  sudo systemctl restart geonature
 
 Pour UsersHub :
 
